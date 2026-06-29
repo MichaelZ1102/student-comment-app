@@ -41,7 +41,7 @@ export function resolveModel(): string {
     return configured;
   }
 
-  return "gpt-4o-mini";
+  return "step-3.7-flash";
 }
 
 export async function generateComment({
