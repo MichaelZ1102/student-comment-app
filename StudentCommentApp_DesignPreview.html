@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>学生年终评语生成助手 — 页面风格预览</title>
+<style>
+  :root {
+    --bg: #f8fafc;
+    --surface: #ffffff;
+    --border: #e5e7eb;
+    --muted: #6b7280;
+    --text: #111827;
+    --primary: #2563eb;
+    --success: #16a34a;
+    --danger: #dc2626;
+    --radius: 12px;
+    --shadow: 0 1px 2px rgba(0,0,0,0.04), 0 6px 18px rgba(0,0,0,0.06);
+  }
+
+  * { box-sizing: border-box; }
+  html, body { height: 100%; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+  }
+
+  .tweaks {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    backdrop-filter: blur(10px);
+    background: rgba(255,255,255,0.85);
+    border-bottom: 1px solid var(--border);
+  }
+  .tweaks-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 14px 18px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+  }
+  .tweaks-title { font-weight: 700; letter-spacing: 0.2px; }
+  .tweaks-controls { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+  .tweaks label { font-size: 13px; color: var(--muted); }
+  .tweaks select, .tweaks input[type="range"] {
+    accent-color: var(--primary);
+  }
+
+  .stage {
+    max-width: 1200px;
+    margin: 24px auto;
+    padding: 0 18px;
+    display: grid;
+    gap: 18px;
+  }
+
+  .panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+  }
+  .panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--border);
+    background: #fafafa;
+  }
+  .panel-header h2 { margin: 0; font-size: 16px; }
+  .panel-header .tag {
+    font-size: 12px;
+    padding: 4px 8px;
+    border-radius: 999px;
+    background: #eef2ff;
+    color: #3730a3;
+    border: 1px solid #e0e7ff;
+  }
+  .panel-body { padding: 16px; }
+
+  .fake-page {
+    background: linear-gradient(180deg, #fff 0%, #f7f8fa 100%);
+    border: 1px dashed #d1d5db;
+    border-radius: 10px;
+    padding: 18px;
+    min-height: 260px;
+  }
+
+  /* Variant: clean */
+  .v-clean .btn {
+    display: inline-flex; align-items: center; justify-content: center;
+    padding: 10px 14px; border-radius: 10px; border: 1px solid transparent;
+    font-weight: 600; font-size: 14px; cursor: pointer;
+  }
+  .v-clean .btn-primary { background: var(--primary); color: #fff; }
+  .v-clean .btn-success { background: var(--success); color: #fff; }
+  .v-clean .btn-ghost { background: transparent; color: #374151; border-color: #d1d5db; }
+  .v-clean .card {
+    background: #fff; border: 1px solid #e5e7eb; border-radius: 12px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.04); overflow: hidden;
+  }
+  .v-clean .card + .card { margin-top: 14px; }
+  .v-clean .card-head {
+    padding: 14px 16px; border-bottom: 1px solid #f3f4f6;
+    display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  }
+  .v-clean .card-head h3 { margin: 0; font-size: 16px; font-weight: 700; }
+  .v-clean .card-body { padding: 16px; }
+  .v-clean .field { margin-top: 12px; }
+  .v-clean .field label { display: block; font-size: 13px; font-weight: 600; color: #374151; margin-bottom: 6px; }
+  .v-clean .field input, .v-clean .field select, .v-clean .field textarea {
+    width: 100%; padding: 10px 12px; border-radius: 10px;
+    border: 1px solid #d1d5db; background: #fff; font: inherit; color: #111827;
+  }
+  .v-clean .field textarea { min-height: 96px; resize: vertical; }
+  .v-clean .grid { display: grid; gap: 12px; }
+  .v-clean .grid-2 { grid-template-columns: 1fr 1fr; }
+  .v-clean .actions { display: flex; gap: 10px; margin-top: 14px; flex-wrap: wrap; }
+
+  /* Variant: admin */
+  .v-admin .btn {
+    display: inline-flex; align-items: center; justify-content: center;
+    padding: 9px 14px; border-radius: 8px; border: 1px solid transparent;
+    font-weight: 600; font-size: 13px; cursor: pointer;
+  }
+  .v-admin .btn-primary { background: #0f172a; color: #fff; }
+  .v-admin .btn-success { background: #15803d; color: #fff; }
+  .v-admin .btn-ghost { background: #fff; color: #0f172a; border-color: #cbd5e1; }
+  .v-admin .card {
+    background: #fff; border: 1px solid #e2e8f0; border-radius: 10px;
+    box-shadow: none;
+  }
+  .v-admin .card + .card { margin-top: 12px; }
+  .v-admin .card-head {
+    padding: 12px 14px; border-bottom: 1px solid #f1f5f9;
+    display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  }
+  .v-admin .card-head h3 { margin: 0; font-size: 14px; font-weight: 700; letter-spacing: 0.2px; }
+  .v-admin .card-body { padding: 14px; }
+  .v-admin .field { margin-top: 10px; }
+  .v-admin .field label { display: block; font-size: 12px; font-weight: 700; color: #475569; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.3px; }
+  .v-admin .field input, .v-admin .field select, .v-admin .field textarea {
+    width: 100%; padding: 9px 10px; border-radius: 8px;
+    border: 1px solid #cbd5e1; background: #f8fafc; font: inherit; color: #0f172a;
+  }
+  .v-admin .field textarea { min-height: 84px; resize: vertical; }
+  .v-admin .grid { display: grid; gap: 10px; }
+  .v-admin .grid-2 { grid-template-columns: 1fr 1fr; }
+  .v-admin .actions { display: flex; gap: 10px; margin-top: 12px; flex-wrap: wrap; }
+
+  /* Variant: editorial */
+  .v-editorial .btn {
+    display: inline-flex; align-items: center; justify-content: center;
+    padding: 10px 14px; border-radius: 999px; border: 1px solid transparent;
+    font-weight: 600; font-size: 14px; cursor: pointer;
+  }
+  .v-editorial .btn-primary { background: #111827; color: #fff; }
+  .v-editorial .btn-success { background: #059669; color: #fff; }
+  .v-editorial .btn-ghost { background: transparent; color: #374151; border-color: #d6d3d1; }
+  .v-editorial .card {
+    background: #fff; border: 1px solid #e7e5e4; border-radius: 14px;
+    box-shadow: 0 1px 0 rgba(0,0,0,0.03);
+  }
+  .v-editorial .card + .card { margin-top: 18px; }
+  .v-editorial .card-head {
+    padding: 16px 18px; border-bottom: 1px solid #f5f5f4;
+    display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  }
+  .v-editorial .card-head h3 { margin: 0; font-size: 18px; font-weight: 700; }
+  .v-editorial .card-body { padding: 18px; }
+  .v-editorial .field { margin-top: 14px; }
+  .v-editorial .field label { display: block; font-size: 13px; font-weight: 600; color: #44403c; margin-bottom: 6px; }
+  .v-editorial .field input, .v-editorial .field select, .v-editorial .field textarea {
+    width: 100%; padding: 10px 12px; border-radius: 10px;
+    border: 1px solid #d6d3d1; background: #fafaf9; font: inherit; color: #1c1917;
+  }
+  .v-editorial .field textarea { min-height: 110px; resize: vertical; }
+  .v-editorial .grid { display: grid; gap: 14px; }
+  .v-editorial .grid-2 { grid-template-columns: 1fr 1fr; }
+  .v-editorial .actions { display: flex; gap: 10px; margin-top: 16px; flex-wrap: wrap; }
+
+  @media (max-width: 720px) {
+    .grid-2 { grid-template-columns: 1fr !important; }
+    .tweaks-inner { flex-direction: column; align-items: flex-start; }
+  }
+</style>
+</head>
+<body>
+
+<div class="tweaks">
+  <div class="tweaks-inner">
+    <div class="tweaks-title">🎨 页面风格预览</div>
+    <div class="tweaks-controls">
+      <label>
+        页面
+        <select id="pagePicker">
+          <option value="home">首页</option>
+          <option value="single">单个生成</option>
+          <option value="batch">批量生成</option>
+          <option value="export">导出</option>
+        </select>
+      </label>
+      <label>
+        风格
+        <select id="variantPicker">
+          <option value="v-clean">Clean（当前项目风格）</option>
+          <option value="v-admin">Admin（管理后台风）</option>
+          <option value="v-editorial">Editorial（编辑感强）</option>
+        </select>
+      </label>
+    </div>
+  </div>
+</div>
+
+<div class="stage" id="stage">
+  <div class="panel">
+    <div class="panel-header">
+      <h2 id="panelTitle">首页</h2>
+      <span class="tag" id="variantTag">Clean</span>
+    </div>
+    <div class="panel-body" id="panelBody"></div>
+  </div>
+</div>
+
+<script>
+  const pages = {
+    home: {
+      title: '首页',
+      render(v) {
+        return `<div class="fake-page ${v}">
+          <div style="max-width:980px;margin:0 auto;text-align:center;padding:18px 0 8px;">
+            <h1 style="font-size:${v==='v-editorial'?28:24}px;font-weight:800;margin:0 0 10px;">学生年终评语生成助手</h1>
+            <p style="color:#6b7280;font-size:15px;margin:0 0 22px;">帮助老师快速生成正式、自然的学生年终评语，支持单个生成与批量处理。</p>
+            <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+              <span class="btn btn-primary">单个生成</span>
+              <span class="btn btn-success">批量生成</span>
+            </div>
+          </div>
+        </div>`;
+      }
+    },
+    single: {
+      title: '单个生成',
+      render(v) {
+        return `<div class="fake-page ${v}">
+          <div class="card">
+            <div class="card-head"><h3>单个学生评语生成</h3><span style="font-size:12px;color:#6b7280;">填写信息，生成个性化评语</span></div>
+            <div class="card-body">
+              <div class="grid grid-2">
+                <div class="field"><label>学生姓名</label><input placeholder="请输入姓名" /></div>
+                <div class="field"><label>性别</label><select><option>请选择</option><option>男</option><option>女</option><option>未知</option></select></div>
+              </div>
+              <div class="field"><label>班级</label><input placeholder="例如：三年级二班" /></div>
+              <div class="field"><label>老师原始评语要点</label><textarea placeholder="课堂表现、优缺点、典型事例..."></textarea></div>
+              <div class="field"><label>语气风格</label><select><option>正式稳重</option><option>温暖鼓励</option><option>简洁朴实</option></select></div>
+              <div class="field"><label>额外要求（可选）</label><textarea placeholder="突出体育特长 / 避免提到某次失误..."></textarea></div>
+              <div class="actions">
+                <span class="btn btn-primary">生成评语</span>
+                <span class="btn btn-ghost">清空</span>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-head"><h3>生成结果</h3><span style="font-size:12px;color:#6b7280;">可直接编辑后再导出</span></div>
+            <div class="card-body">
+              <div class="field"><textarea>此处为 AI 生成的评语结果...</textarea></div>
+              <div class="actions">
+                <span class="btn btn-ghost">复制到剪贴板</span>
+                <span class="btn btn-success">导出 Word</span>
+              </div>
+            </div>
+          </div>
+        </div>`;
+      }
+    },
+    batch: {
+      title: '批量生成',
+      render(v) {
+        return `<div class="fake-page ${v}">
+          <div class="card">
+            <div class="card-head"><h3>批量导入与生成</h3><span style="font-size:12px;color:#6b7280;">上传 Excel 或 CSV，一键批量生成</span></div>
+            <div class="card-body">
+              <div class="field">
+                <label>上传文件</label>
+                <div style="border:2px dashed #d1d5db;border-radius:12px;padding:28px;text-align:center;color:#6b7280;">
+                  点击或拖拽上传文件<br/><span style="font-size:12px;">支持格式：xlsx, csv</span>
+                </div>
+              </div>
+              <div class="actions">
+                <span class="btn btn-success">批量生成评语</span>
+                <span class="btn btn-ghost">下载模板</span>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-head"><h3>共 3 条记录</h3></div>
+            <div class="card-body">
+              <div style="overflow-x:auto;">
+                <table style="width:100%;font-size:13px;border-collapse:collapse;">
+                  <thead>
+                    <tr style="background:#f9fafb;text-align:left;">
+                      <th style="padding:10px;border-bottom:1px solid #e5e7eb;">姓名</th>
+                      <th style="padding:10px;border-bottom:1px solid #e5e7eb;">班级</th>
+                      <th style="padding:10px;border-bottom:1px solid #e5e7eb;">原始要点</th>
+                      <th style="padding:10px;border-bottom:1px solid #e5e7eb;">生成结果</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr><td style="padding:10px;border-bottom:1px solid #f3f4f6;">张三</td><td style="padding:10px;border-bottom:1px solid #f3f4f6;">三年级二班</td><td style="padding:10px;border-bottom:1px solid #f3f4f6;">乐于助人，数学进步明显</td><td style="padding:10px;border-bottom:1px solid #f3f4f6;">-</td></tr>
+                    <tr><td style="padding:10px;border-bottom:1px solid #f3f4f6;">李四</td><td style="padding:10px;border-bottom:1px solid #f3f4f6;">三年级二班</td><td style="padding:10px;border-bottom:1px solid #f3f4f6;">体育突出，语文需加强</td><td style="padding:10px;border-bottom:1px solid #f3f4f6;">-</td></tr>
+                    <tr><td style="padding:10px;">王五</td><td style="padding:10px;">三年级二班</td><td style="padding:10px;">课堂活跃，作业偶有迟交</td><td style="padding:10px;">-</td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <div class="actions">
+                <span class="btn btn-ghost">复制全部结果</span>
+                <span class="btn btn-success">导出全部 Word</span>
+              </div>
+            </div>
+          </div>
+        </div>`;
+      }
+    },
+    export: {
+      title: '导出',
+      render(v) {
+        return `<div class="fake-page ${v}">
+          <div class="card">
+            <div class="card-head"><h3>导出评语</h3><span style="font-size:12px;color:#6b7280;">选择格式并下载文件</span></div>
+            <div class="card-body">
+              <div class="field"><label>导出格式</label><select><option>Word (.docx)</option><option>PDF（后续版本）</option></select></div>
+              <div class="actions"><span class="btn btn-primary">下载文件</span></div>
+            </div>
+          </div>
+        </div>`;
+      }
+    }
+  };
+
+  const pagePicker = document.getElementById('pagePicker');
+  const variantPicker = document.getElementById('variantPicker');
+  const panelTitle = document.getElementById('panelTitle');
+  const panelBody = document.getElementById('panelBody');
+  const variantTag = document.getElementById('variantTag');
+
+  const labels = { 'v-clean': 'Clean', 'v-admin': 'Admin', 'v-editorial': 'Editorial' };
+
+  function render() {
+    const pageKey = pagePicker.value;
+    const variant = variantPicker.value;
+    const page = pages[pageKey];
+    panelTitle.textContent = page.title;
+    variantTag.textContent = labels[variant];
+    panelBody.innerHTML = page.render(variant);
+  }
+
+  pagePicker.addEventListener('change', render);
+  variantPicker.addEventListener('change', render);
+  render();
+</script>
+</body>
+</html>
